@@ -5,6 +5,7 @@ import wheelSvg from '../../assets/logos/Wheel.svg';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { COUNTRIES } from '../../data/countries';
 import ReactCountryFlag from 'react-country-flag';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 const FAQ_ITEMS = [
   {
@@ -38,10 +39,16 @@ function ContactLight() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
   const [submitMessage, setSubmitMessage] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
   const sectionRef = useRef(null);
+  const modalRef = useRef(null);
   const [formRef, formVisible] = useScrollAnimation();
   const [contactRef, contactVisible] = useScrollAnimation();
   const [faqRef, faqVisible] = useScrollAnimation();
+  
+  const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY || '10000000-ffff-ffff-ffff-000000000001'; // Default test key
   
   const selectedCountry = COUNTRIES.find(c => c.phoneCode === selectedCountryCode) || COUNTRIES[0];
 
@@ -99,7 +106,8 @@ function ContactLight() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
+  // Handle form submission - show confirmation modal first
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -109,6 +117,41 @@ function ContactLight() {
       return;
     }
 
+    // Check if captcha is completed
+    if (!captchaToken) {
+      setSubmitStatus('error');
+      setSubmitMessage('Please complete the captcha verification.');
+      setTimeout(() => setSubmitStatus(null), 5000);
+      return;
+    }
+
+    // Show confirmation modal
+    setShowConfirmModal(true);
+  };
+
+  // Handle captcha verification
+  const handleCaptchaVerify = (token) => {
+    setCaptchaToken(token);
+    // Clear any captcha errors
+    if (errors.captcha) {
+      setErrors(prev => ({ ...prev, captcha: '' }));
+    }
+  };
+
+  // Handle captcha expiration
+  const handleCaptchaExpire = () => {
+    setCaptchaToken(null);
+  };
+
+  // Handle captcha error
+  const handleCaptchaError = () => {
+    setCaptchaToken(null);
+    setErrors(prev => ({ ...prev, captcha: 'Captcha verification failed. Please try again.' }));
+  };
+
+  // Actually submit the form after confirmation
+  const handleConfirmSubmit = async () => {
+    setShowConfirmModal(false);
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitMessage('');
@@ -128,7 +171,8 @@ function ContactLight() {
           email: formData.email,
           phoneNumber: formData.phoneNumber,
           message: formData.message,
-          countryCode: selectedCountryCode
+          countryCode: selectedCountryCode,
+          captchaToken: captchaToken
         }),
       });
 
@@ -147,6 +191,11 @@ function ContactLight() {
           message: ''
         });
         setErrors({});
+        setCaptchaToken(null);
+        // Reset captcha
+        if (captchaRef.current) {
+          captchaRef.current.resetCaptcha();
+        }
         
         // Clear success message after 5 seconds
         setTimeout(() => {
@@ -167,6 +216,26 @@ function ContactLight() {
       setIsSubmitting(false);
     }
   };
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showConfirmModal && modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowConfirmModal(false);
+      }
+    };
+
+    if (showConfirmModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showConfirmModal]);
 
   useEffect(() => {
     if (selectedCountryCode === '+63' && formData.phoneNumber.length > 0) {
@@ -546,6 +615,19 @@ function ContactLight() {
                   </div>
                 )}
 
+                <div>
+                  <HCaptcha
+                    sitekey={HCAPTCHA_SITE_KEY}
+                    onVerify={handleCaptchaVerify}
+                    onExpire={handleCaptchaExpire}
+                    onError={handleCaptchaError}
+                    ref={captchaRef}
+                  />
+                  {errors.captcha && (
+                    <p className="mt-1 text-sm text-red-500">{errors.captcha}</p>
+                  )}
+                </div>
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
@@ -562,6 +644,77 @@ function ContactLight() {
           </div>
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+          onClick={() => setShowConfirmModal(false)}
+        >
+          <motion.div
+            ref={modalRef}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white rounded-3xl p-6 md:p-8 max-w-[600px] w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-[#2cbafc]/20"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-3xl md:text-4xl font-semibold text-[#093389]">Confirm Submission</h3>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="text-[#0b0c0e]/60 hover:text-[#0b0c0e] transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-[#0b0c0e]/80 mb-6 text-lg">Are you sure you want to send this message?</p>
+
+            <div className="space-y-4 mb-6">
+              <div className="bg-[#2cbafc]/5 rounded-xl p-4 border-2 border-[#2cbafc]/20">
+                <p className="text-sm text-[#093389] uppercase tracking-wider mb-2 font-semibold">Name</p>
+                <p className="text-[#0b0c0e] font-medium">{formData.firstName} {formData.lastName}</p>
+              </div>
+
+              <div className="bg-[#2cbafc]/5 rounded-xl p-4 border-2 border-[#2cbafc]/20">
+                <p className="text-sm text-[#093389] uppercase tracking-wider mb-2 font-semibold">Email</p>
+                <p className="text-[#0b0c0e] font-medium">{formData.email}</p>
+              </div>
+
+              <div className="bg-[#2cbafc]/5 rounded-xl p-4 border-2 border-[#2cbafc]/20">
+                <p className="text-sm text-[#093389] uppercase tracking-wider mb-2 font-semibold">Phone Number</p>
+                <p className="text-[#0b0c0e] font-medium">{selectedCountryCode} {formData.phoneNumber}</p>
+              </div>
+
+              <div className="bg-[#2cbafc]/5 rounded-xl p-4 border-2 border-[#2cbafc]/20">
+                <p className="text-sm text-[#093389] uppercase tracking-wider mb-2 font-semibold">Message</p>
+                <p className="text-[#0b0c0e]/80 whitespace-pre-wrap">{formData.message}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="flex-1 bg-gray-100 hover:bg-gray-200 text-[#0b0c0e] font-semibold py-3 rounded-xl transition-colors border-2 border-gray-200"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmSubmit}
+                className="flex-1 bg-gradient-to-r from-[#093389] to-[#2cbafc] hover:shadow-xl text-white font-semibold py-3 rounded-xl transition-all"
+              >
+                Confirm & Send
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* FAQ Section - Accordion Style */}
       <section className="w-full bg-gradient-to-b from-white to-[#f8fafc] py-20 px-6 md:px-12">

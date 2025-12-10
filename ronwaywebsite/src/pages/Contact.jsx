@@ -5,6 +5,7 @@ import wheelSvg from '../assets/logos/Wheel.svg';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
 import { COUNTRIES } from '../data/countries';
 import ReactCountryFlag from 'react-country-flag';
+import HCaptcha from '@hcaptcha/react-hcaptcha';
 
 const FAQ_ITEMS = [
   {
@@ -38,8 +39,14 @@ function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null); // 'success' or 'error'
   const [submitMessage, setSubmitMessage] = useState('');
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const captchaRef = useRef(null);
   const sectionRef = useRef(null);
+  const modalRef = useRef(null);
   const [faqRef, faqVisible] = useScrollAnimation();
+  
+  const HCAPTCHA_SITE_KEY = import.meta.env.VITE_HCAPTCHA_SITE_KEY || '10000000-ffff-ffff-ffff-000000000001'; // Default test key
   
   const selectedCountry = COUNTRIES.find(c => c.phoneCode === selectedCountryCode) || COUNTRIES[0];
 
@@ -107,8 +114,8 @@ function Contact() {
     return Object.keys(newErrors).length === 0;
   };
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
+  // Handle form submission - show confirmation modal first
+  const handleSubmit = (e) => {
     e.preventDefault();
     
     if (!validateForm()) {
@@ -118,6 +125,41 @@ function Contact() {
       return;
     }
 
+    // Check if captcha is completed
+    if (!captchaToken) {
+      setSubmitStatus('error');
+      setSubmitMessage('Please complete the captcha verification.');
+      setTimeout(() => setSubmitStatus(null), 5000);
+      return;
+    }
+
+    // Show confirmation modal
+    setShowConfirmModal(true);
+  };
+
+  // Handle captcha verification
+  const handleCaptchaVerify = (token) => {
+    setCaptchaToken(token);
+    // Clear any captcha errors
+    if (errors.captcha) {
+      setErrors(prev => ({ ...prev, captcha: '' }));
+    }
+  };
+
+  // Handle captcha expiration
+  const handleCaptchaExpire = () => {
+    setCaptchaToken(null);
+  };
+
+  // Handle captcha error
+  const handleCaptchaError = () => {
+    setCaptchaToken(null);
+    setErrors(prev => ({ ...prev, captcha: 'Captcha verification failed. Please try again.' }));
+  };
+
+  // Actually submit the form after confirmation
+  const handleConfirmSubmit = async () => {
+    setShowConfirmModal(false);
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitMessage('');
@@ -137,7 +179,8 @@ function Contact() {
           email: formData.email,
           phoneNumber: formData.phoneNumber,
           message: formData.message,
-          countryCode: selectedCountryCode
+          countryCode: selectedCountryCode,
+          captchaToken: captchaToken
         }),
       });
 
@@ -156,6 +199,11 @@ function Contact() {
           message: ''
         });
         setErrors({});
+        setCaptchaToken(null);
+        // Reset captcha
+        if (captchaRef.current) {
+          captchaRef.current.resetCaptcha();
+        }
         
         // Clear success message after 5 seconds
         setTimeout(() => {
@@ -176,6 +224,26 @@ function Contact() {
       setIsSubmitting(false);
     }
   };
+
+  // Close modal when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showConfirmModal && modalRef.current && !modalRef.current.contains(event.target)) {
+        setShowConfirmModal(false);
+      }
+    };
+
+    if (showConfirmModal) {
+      document.addEventListener('mousedown', handleClickOutside);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.body.style.overflow = 'unset';
+    };
+  }, [showConfirmModal]);
 
   // Handle country code change - ensure Philippines numbers start with 0
   useEffect(() => {
@@ -538,6 +606,19 @@ function Contact() {
                 </div>
               )}
 
+              <div>
+                <HCaptcha
+                  sitekey={HCAPTCHA_SITE_KEY}
+                  onVerify={handleCaptchaVerify}
+                  onExpire={handleCaptchaExpire}
+                  onError={handleCaptchaError}
+                  ref={captchaRef}
+                />
+                {errors.captcha && (
+                  <p className="mt-1 text-sm text-red-500">{errors.captcha}</p>
+                )}
+              </div>
+
               <button
                 type="submit"
                 disabled={isSubmitting}
@@ -553,6 +634,77 @@ function Contact() {
           </motion.div>
         </div>
       </section>
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+          onClick={() => setShowConfirmModal(false)}
+        >
+          <motion.div
+            ref={modalRef}
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#021945] rounded-2xl p-6 md:p-8 max-w-[600px] w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-white/10"
+          >
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-2xl md:text-3xl font-bold text-white">Confirm Submission</h3>
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="text-white/70 hover:text-white transition-colors"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <p className="text-white/90 mb-6 text-lg">Are you sure you want to send this message?</p>
+
+            <div className="space-y-4 mb-6">
+              <div className="bg-[#021637]/50 rounded-lg p-4 border border-white/10">
+                <p className="text-sm text-white/60 uppercase tracking-wider mb-2">Name</p>
+                <p className="text-white font-medium">{formData.firstName} {formData.lastName}</p>
+              </div>
+
+              <div className="bg-[#021637]/50 rounded-lg p-4 border border-white/10">
+                <p className="text-sm text-white/60 uppercase tracking-wider mb-2">Email</p>
+                <p className="text-white font-medium">{formData.email}</p>
+              </div>
+
+              <div className="bg-[#021637]/50 rounded-lg p-4 border border-white/10">
+                <p className="text-sm text-white/60 uppercase tracking-wider mb-2">Phone Number</p>
+                <p className="text-white font-medium">{selectedCountryCode} {formData.phoneNumber}</p>
+              </div>
+
+              <div className="bg-[#021637]/50 rounded-lg p-4 border border-white/10">
+                <p className="text-sm text-white/60 uppercase tracking-wider mb-2">Message</p>
+                <p className="text-white/90 whitespace-pre-wrap">{formData.message}</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <button
+                onClick={() => setShowConfirmModal(false)}
+                className="flex-1 bg-white/10 hover:bg-white/20 text-white font-semibold py-3 rounded-lg transition-colors border border-white/20"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmSubmit}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
+              >
+                Confirm & Send
+              </button>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
 
       {/* Middle Section: Our Location */}
       <section id="location" className="w-full bg-[#021945] py-4 px-4 md:py-6 md:px-8 pb-18 md:pb-20 relative" style={{ zIndex: 2 }}>

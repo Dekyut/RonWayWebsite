@@ -41,8 +41,10 @@ app.use(helmet({
     directives: {
       defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"], // Allow inline styles for email templates
-      scriptSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://js.hcaptcha.com", "https://*.hcaptcha.com"],
       imgSrc: ["'self'", "data:", "https:"],
+      frameSrc: ["'self'", "https://js.hcaptcha.com", "https://*.hcaptcha.com"],
+      connectSrc: ["'self'", "https://hcaptcha.com", "https://*.hcaptcha.com"],
     },
   },
   crossOriginEmbedderPolicy: false, // Allow embedding for iframes (maps, etc.)
@@ -141,7 +143,50 @@ const createTransporter = () => {
 // Contact form endpoint
 app.post('/api/contact', async (req, res) => {
   try {
-    const { firstName, lastName, email, phoneNumber, message, countryCode } = req.body;
+    const { firstName, lastName, email, phoneNumber, message, countryCode, captchaToken } = req.body;
+
+    // Security: Verify hCaptcha token
+    if (!captchaToken) {
+      return res.status(400).json({ 
+        success: false, 
+        error: 'Captcha verification is required' 
+      });
+    }
+
+    // Verify captcha with hCaptcha API
+    const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY;
+    if (HCAPTCHA_SECRET_KEY) {
+      try {
+        const captchaVerifyResponse = await fetch('https://hcaptcha.com/siteverify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            secret: HCAPTCHA_SECRET_KEY,
+            response: captchaToken
+          })
+        });
+
+        const captchaData = await captchaVerifyResponse.json();
+        
+        if (!captchaData.success) {
+          return res.status(400).json({ 
+            success: false, 
+            error: 'Captcha verification failed. Please try again.' 
+          });
+        }
+      } catch (captchaError) {
+        console.error('Error verifying captcha:', captchaError);
+        // In production, you might want to fail here, but for development we'll allow it
+        if (process.env.NODE_ENV === 'production') {
+          return res.status(500).json({ 
+            success: false, 
+            error: 'Captcha verification service error. Please try again later.' 
+          });
+        }
+      }
+    }
 
     // Security: Input validation - check required fields
     if (!firstName || !lastName || !email || !phoneNumber || !message) {

@@ -27,7 +27,27 @@ Copy `.env.example` to `.env` and fill in your email credentials:
 cp .env.example .env
 ```
 
-### 3. Email Configuration Options
+### 3. Configure hCaptcha (Required for Form Submission)
+
+1. Sign up for a free hCaptcha account at https://www.hcaptcha.com/
+2. Create a new site and get your Site Key and Secret Key
+3. Add the keys to your `.env` file:
+
+```env
+HCAPTCHA_SECRET_KEY=your-secret-key-here
+```
+
+4. In your frontend `.env` file (or `vite.config.js`), add:
+
+```env
+VITE_HCAPTCHA_SITE_KEY=your-site-key-here
+```
+
+**Note:** For development/testing, you can use the test keys:
+- Site Key: `10000000-ffff-ffff-ffff-000000000001`
+- Secret Key: `0x0000000000000000000000000000000000000000`
+
+### 4. Email Configuration Options
 
 #### Option A: Gmail (Recommended for Quick Setup)
 
@@ -56,7 +76,7 @@ EMAIL_USER=your-email@domain.com
 EMAIL_PASSWORD=your-password
 ```
 
-### 4. Run the Server
+### 5. Run the Server
 
 **Development:**
 ```bash
@@ -84,7 +104,8 @@ Submit contact form data.
   "email": "john@example.com",
   "phoneNumber": "09123456789",
   "message": "Hello, I need a ride...",
-  "countryCode": "+63"
+  "countryCode": "+63",
+  "captchaToken": "hcaptcha-token-here"
 }
 ```
 
@@ -110,10 +131,11 @@ Health check endpoint.
 
 ## Security Features
 
-1. **Rate Limiting**: 5 requests per 15 minutes per IP
-2. **Input Sanitization**: Prevents XSS attacks
-3. **CORS**: Only allows requests from configured frontend URL
-4. **Environment Variables**: Sensitive data stored securely
+1. **hCaptcha Verification**: Prevents bot submissions
+2. **Rate Limiting**: 5 requests per 15 minutes per IP
+3. **Input Sanitization**: Prevents XSS attacks
+4. **CORS**: Only allows requests from configured frontend URL
+5. **Environment Variables**: Sensitive data stored securely
 
 ## Deployment
 
