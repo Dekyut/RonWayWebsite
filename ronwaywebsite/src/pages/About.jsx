@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import wheelSvg from '../assets/logos/Wheel.svg';
 import { useScrollAnimation } from '../hooks/useScrollAnimation';
-import { ALL_GALLERY_IMAGES } from '../data/gallery';
+import { ABOUT_TEAM_GALLERY_IMAGES } from '../data/aboutGallery';
 import { TEAM_LEADERS, ALL_TEAM_MEMBERS } from '../data/team';
 
 const MILESTONES = [
@@ -61,7 +61,8 @@ function About() {
   const duplicatedTeamMembers = [...ALL_TEAM_MEMBERS, ...ALL_TEAM_MEMBERS];
   
   // Duplicate images for seamless infinite scroll
-  const duplicatedImages = [...ALL_GALLERY_IMAGES, ...ALL_GALLERY_IMAGES];
+  const duplicatedImages = [...ABOUT_TEAM_GALLERY_IMAGES, ...ABOUT_TEAM_GALLERY_IMAGES];
+  const totalAboutGalleryImages = ABOUT_TEAM_GALLERY_IMAGES.length;
   
   // Continuous scrolling animation using requestAnimationFrame for gallery
   useEffect(() => {
@@ -809,7 +810,7 @@ function About() {
             className="gallery-scroll gap-4 md:gap-6"
           >
             {duplicatedImages.map((image, index) => {
-              const hasError = imageErrors[index % ALL_GALLERY_IMAGES.length];
+              const hasError = imageErrors[index % totalAboutGalleryImages];
               if (hasError) return null;
               
               return (
@@ -831,9 +832,9 @@ function About() {
                   <div className="relative w-full h-full overflow-hidden">
                     <img
                       src={image.src}
-                      alt={`Gallery image ${(index % ALL_GALLERY_IMAGES.length) + 1}`}
+                      alt={`Gallery image ${(index % totalAboutGalleryImages) + 1}`}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      onError={() => setImageErrors(prev => ({ ...prev, [index % ALL_GALLERY_IMAGES.length]: true }))}
+                      onError={() => setImageErrors(prev => ({ ...prev, [index % totalAboutGalleryImages]: true }))}
                       loading="lazy"
                     />
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
