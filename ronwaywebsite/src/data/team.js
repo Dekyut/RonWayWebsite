@@ -47,13 +47,6 @@ export const TEAM_MEMBERS = [
 // Drivers
 export const DRIVERS = [
   {
-    name: 'Omar Delgado',
-    role: 'Driver',
-    image: OmarDelgadoImg,
-    certificate: OmarDelgadoCert,
-    description: 'A skilled and experienced driver committed to providing safe and comfortable transportation services. With a focus on professionalism and customer satisfaction, Omar ensures every journey is smooth and reliable.'
-  },
-  {
     name: 'Edward Lucas',
     role: 'Driver',
     image: EdwardLucasImg,
