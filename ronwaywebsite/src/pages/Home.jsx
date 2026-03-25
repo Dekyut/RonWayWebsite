@@ -290,7 +290,7 @@ function Home() {
       </section>
 
       {/* Empty Black Section - Spacer between text and search */}
-      <section className="w-full bg-black pt-[clamp(3rem,6vh,5rem)] pb-[clamp(5rem,10vh,7rem)] sm:py-[clamp(2rem,4vh,3rem)]"></section>
+      <section className="w-full bg-black pt-[clamp(0.5rem,1vh,1rem)] pb-[clamp(1rem,2vh,1.5rem)] sm:py-[clamp(0.5rem,1vh,1rem)]"></section>
 
       {/* Search Form Section - Separate, no overlap */}
       <section className="relative w-full bg-black px-4 md:px-8 py-[clamp(2rem,4vh,3rem)] flex flex-col items-center">
@@ -893,10 +893,9 @@ function Home() {
         </div>
       </section>
 
-      {/* Decorative Gradient Section */}
-      <section className="w-full flex flex-col">
+      {/* Decorative Gradient Section - Google Reviews (hidden for now) */}
+      {/* <section className="w-full flex flex-col">
         <div className="w-full flex flex-col">
-          {/* Top gradient: Black to Dark Blue */}
           <div 
             className="w-full"
             style={{ 
@@ -904,7 +903,6 @@ function Home() {
               background: 'linear-gradient(to bottom, #000000, #051941)'
             }}
           />
-          {/* Dark blue solid container with reviews */}
           <div 
             id="reviews"
             className="w-full flex items-center justify-center py-8 md:py-10"
@@ -912,7 +910,6 @@ function Home() {
           >
             <GoogleReviewsCarousel reviews={GOOGLE_REVIEWS} autoPlayInterval={4000} />
           </div>
-          {/* Bottom gradient: Dark Blue to Black */}
           <div 
             className="w-full"
             style={{ 
@@ -921,7 +918,7 @@ function Home() {
             }}
           />
         </div>
-      </section>
+      </section> */}
 
     </div>
   );

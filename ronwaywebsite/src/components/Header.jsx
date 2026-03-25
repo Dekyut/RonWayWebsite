@@ -30,13 +30,13 @@ function Header() {
         isScrolled ? 'bg-[#051941]' : 'bg-black'
       }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 sm:py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 sm:py-2.5">
         {/* Logo on the left */}
         <div className="flex items-center">
           <img
             src={logo}
             alt="RonWay Cars and Travel, Inc."
-            className="h-11 w-auto sm:h-14 md:h-[72px]"
+            className="h-9 w-auto sm:h-11 md:h-12"
             style={{
               imageRendering: '-webkit-optimize-contrast',
               transform: 'translateZ(0)',

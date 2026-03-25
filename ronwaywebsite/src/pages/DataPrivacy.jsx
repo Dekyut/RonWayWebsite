@@ -46,7 +46,6 @@ function DataPrivacy() {
                     <li>Full name (first name and last name)</li>
                     <li>Email address</li>
                     <li>Phone number</li>
-                    <li>Country code</li>
                   </ul>
                 </div>
                 <div>
@@ -113,28 +112,9 @@ function DataPrivacy() {
               </p>
             </section>
 
-            {/* Your Rights */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">7. Your Rights</h2>
-              <p className="text-base md:text-lg mb-4">
-                Depending on your jurisdiction, you may have the following rights regarding your personal data:
-              </p>
-              <ul className="list-disc list-inside space-y-2 text-white/80 text-base md:text-lg">
-                <li><strong className="text-white">Right of Access:</strong> Request a copy of the personal data we hold about you</li>
-                <li><strong className="text-white">Right to Rectification:</strong> Request correction of inaccurate or incomplete data</li>
-                <li><strong className="text-white">Right to Erasure:</strong> Request deletion of your personal data</li>
-                <li><strong className="text-white">Right to Restrict Processing:</strong> Request limitation of how we process your data</li>
-                <li><strong className="text-white">Right to Data Portability:</strong> Request transfer of your data to another service</li>
-                <li><strong className="text-white">Right to Object:</strong> Object to our processing of your personal data</li>
-              </ul>
-              <p className="text-base md:text-lg mt-4">
-                To exercise any of these rights, please contact us using the details provided below.
-              </p>
-            </section>
-
             {/* Third-Party Links */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">8. Third-Party Links</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">7. Third-Party Links</h2>
               <p className="text-base md:text-lg">
                 Our website may contain links to third-party websites or services that are not owned or 
                 controlled by RonWay. We have no control over and assume no responsibility for the content, 
@@ -145,7 +125,7 @@ function DataPrivacy() {
 
             {/* Children's Privacy */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">9. Children&apos;s Privacy</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">8. Children&apos;s Privacy</h2>
               <p className="text-base md:text-lg">
                 Our services are not directed to individuals under the age of 18. We do not knowingly 
                 collect personal information from children. If we become aware that we have collected 
@@ -156,7 +136,7 @@ function DataPrivacy() {
 
             {/* Changes to This Policy */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">10. Changes to This Policy</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">9. Changes to This Policy</h2>
               <p className="text-base md:text-lg">
                 We may update this Data Privacy Policy from time to time to reflect changes in our practices, 
                 technology, legal requirements, or other factors. We will notify you of any material changes 
@@ -167,7 +147,7 @@ function DataPrivacy() {
 
             {/* Contact Us */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">11. Contact Us</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">10. Contact Us</h2>
               <p className="text-base md:text-lg mb-4">
                 If you have any questions, concerns, or requests regarding this Data Privacy Policy or our 
                 data practices, please contact us:
@@ -183,7 +163,7 @@ function DataPrivacy() {
                   <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
-                  <p><strong>Phone:</strong> 0968-852-7834</p>
+                  <p><strong>Phone:</strong> 0977-302-2435</p>
                 </div>
                 <div className="flex items-center gap-3">
                   <svg className="w-5 h-5 text-blue-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">

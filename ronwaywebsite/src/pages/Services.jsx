@@ -31,12 +31,12 @@ const SERVICE_CARDS = [
     }
   },
   {
-    title: 'One Way',
-    description: 'The ability to pick up a car in one city and drop it off in another, suitable for road trips and relocation purposes.',
+    title: 'One Way & Stand-by',
+    description: 'One-way transfers to your destination, or have your driver stand by and wait while you attend to your activities.',
     image: services3,
     modalContent: {
-      title: 'What is One Way Rentals?',
-      description: 'One-way rentals allow you to pick up a vehicle in one location and drop it off in another, ideal for relocations and long-distance travel. Ronway Cars and Travels provides flexible drop-off options—perfect for travelers who need to end their journey at a different destination.',
+      title: 'What is One Way & Stand-by?',
+      description: 'One-way service allows you to be driven from one location to another—ideal for point-to-point transfers, relocations, or long-distance travel. Stand-by service means your dedicated driver drops you off at your destination and waits on-site for a specified period, ready to take you to your next stop or back whenever you need. Ronway Cars and Travels offers both options for maximum flexibility—perfect for business meetings, events, errands, or any trip where you want a driver ready and waiting.',
       image: services3
     }
   }

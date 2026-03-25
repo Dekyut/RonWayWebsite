@@ -1,5 +1,4 @@
 import { Link } from 'react-router-dom';
-import xIcon from '../assets/logos/X-SocMedIcon2.png';
 import ronwayLogo from '../assets/logos/RonWayWhite3.svg';
 
 function Footer() {
@@ -43,7 +42,7 @@ function Footer() {
       ],
       extra: [
         { icon: 'email', text: 'ronwaycars.travel@gmail.com' },
-        { icon: 'phone', text: '0968-852-7834' },
+        { icon: 'phone', text: '0977-302-2435' },
       ],
     },
     {
@@ -112,22 +111,11 @@ function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Social Media Icons */}
           <div className="flex items-center gap-5">
-            {/* X / Twitter */}
-            <a
-              href="#"
-              aria-label="RonWay on X/Twitter"
-              className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center overflow-hidden transition-colors duration-200"
-            >
-              <img
-                src={xIcon}
-                alt="X/Twitter"
-                className="h-full w-full object-contain p-1.5"
-              />
-            </a>
-
             {/* Facebook */}
             <a
-              href="#"
+              href="https://www.facebook.com/profile.php?id=61571191304127"
+              target="_blank"
+              rel="noopener noreferrer"
               aria-label="RonWay on Facebook"
               className="h-9 w-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors duration-200"
             >
