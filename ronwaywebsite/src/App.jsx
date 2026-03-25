@@ -8,6 +8,7 @@ import About from './pages/About.jsx';
 import Services from './pages/Services.jsx';
 import SafetyPrecautions from './pages/SafetyPrecautions.jsx';
 import Contact from './pages/Contact.jsx';
+import DataPrivacy from './pages/DataPrivacy.jsx';
 import HeaderLight from './components/light/HeaderLight.jsx';
 import FooterLight from './components/light/FooterLight.jsx';
 import HomeLight from './pages/light/HomeLight.jsx';
@@ -70,6 +71,7 @@ function App() {
         '/services': 'Services | RonWay',
         '/safety-precautions': 'Safety Precautions | RonWay',
         '/contact': 'Contact | RonWay',
+        '/data-privacy': 'Data Privacy | RonWay',
       };
       
       return titleMap[path] || 'RonWay';
@@ -114,6 +116,11 @@ function App() {
               <Route path="/contact" element={
                 <PageTransition>
                   <Contact />
+                </PageTransition>
+              } />
+              <Route path="/data-privacy" element={
+                <PageTransition>
+                  <DataPrivacy />
                 </PageTransition>
               } />
               <Route path="/light" element={
