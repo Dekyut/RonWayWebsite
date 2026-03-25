@@ -57,15 +57,6 @@ function DataPrivacy() {
                     <li>Phone call records</li>
                   </ul>
                 </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-blue-400 mb-2">Technical Data</h3>
-                  <ul className="list-disc list-inside space-y-1 text-white/80">
-                    <li>IP address</li>
-                    <li>Browser type and version</li>
-                    <li>Device information</li>
-                    <li>Cookies and usage data</li>
-                  </ul>
-                </div>
               </div>
             </section>
 
@@ -93,7 +84,7 @@ function DataPrivacy() {
                 information only in the following circumstances:
               </p>
               <ul className="list-disc list-inside space-y-2 text-white/80 text-base md:text-lg">
-                <li><strong className="text-white">Service Providers:</strong> With trusted third-party service providers who assist us in operating our business (e.g., email services, analytics)</li>
+                <li><strong className="text-white">Service Providers:</strong> With trusted third-party service providers who assist us in operating our business (e.g., email services, captcha verification)</li>
                 <li><strong className="text-white">Legal Requirements:</strong> When required by law, regulation, or legal process</li>
                 <li><strong className="text-white">Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
                 <li><strong className="text-white">Consent:</strong> With your explicit consent for any other purpose</li>
@@ -141,20 +132,9 @@ function DataPrivacy() {
               </p>
             </section>
 
-            {/* Cookies */}
-            <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">8. Cookies & Tracking</h2>
-              <p className="text-base md:text-lg">
-                Our website may use cookies and similar tracking technologies to enhance your browsing experience, 
-                analyze website traffic, and understand where our visitors are coming from. You can control cookie 
-                settings through your browser preferences. Please note that disabling cookies may affect the 
-                functionality of our website.
-              </p>
-            </section>
-
             {/* Third-Party Links */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">9. Third-Party Links</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">8. Third-Party Links</h2>
               <p className="text-base md:text-lg">
                 Our website may contain links to third-party websites or services that are not owned or 
                 controlled by RonWay. We have no control over and assume no responsibility for the content, 
@@ -165,7 +145,7 @@ function DataPrivacy() {
 
             {/* Children's Privacy */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">10. Children&apos;s Privacy</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">9. Children&apos;s Privacy</h2>
               <p className="text-base md:text-lg">
                 Our services are not directed to individuals under the age of 18. We do not knowingly 
                 collect personal information from children. If we become aware that we have collected 
@@ -176,7 +156,7 @@ function DataPrivacy() {
 
             {/* Changes to This Policy */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">11. Changes to This Policy</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">10. Changes to This Policy</h2>
               <p className="text-base md:text-lg">
                 We may update this Data Privacy Policy from time to time to reflect changes in our practices, 
                 technology, legal requirements, or other factors. We will notify you of any material changes 
@@ -187,7 +167,7 @@ function DataPrivacy() {
 
             {/* Contact Us */}
             <section>
-              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">12. Contact Us</h2>
+              <h2 className="text-2xl md:text-3xl font-semibold text-white mb-4">11. Contact Us</h2>
               <p className="text-base md:text-lg mb-4">
                 If you have any questions, concerns, or requests regarding this Data Privacy Policy or our 
                 data practices, please contact us:

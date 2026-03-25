@@ -28,7 +28,7 @@ export const TEAM_LEADERS = [
 // Team Members (Staff)
 export const TEAM_MEMBERS = [
   {
-    name: 'Reinier Yton',
+    name: 'Mark Rebayno',
     role: 'Transport Supervisor',
     image: ReinierYtonImg
   },
