@@ -41,6 +41,7 @@ function FooterLight() {
       extra: [
         { icon: 'email', text: 'ronwaycars.travel@gmail.com' },
         { icon: 'phone', text: '0977-302-2435' },
+        { icon: 'phone', text: '0915-802-1884' },
       ],
     },
     {

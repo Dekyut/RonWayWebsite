@@ -427,6 +427,7 @@ function ContactLight() {
                     <div>
                       <p className="text-sm uppercase tracking-wider mb-2 text-[#093389] font-semibold">PHONE</p>
                       <p className="text-lg text-[#0b0c0e]">0977-302-2435</p>
+                      <p className="text-lg text-[#0b0c0e]">0915-802-1884</p>
                     </div>
                   </motion.div>
                 </div>

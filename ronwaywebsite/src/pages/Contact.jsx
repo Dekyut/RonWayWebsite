@@ -427,6 +427,7 @@ function Contact() {
                 <div>
                   <p className="text-sm uppercase tracking-wider mb-1">PHONE:</p>
                   <p className="text-lg">0977-302-2435</p>
+                  <p className="text-lg">0915-802-1884</p>
                 </div>
               </div>
             </motion.div>
