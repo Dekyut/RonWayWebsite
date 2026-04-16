@@ -30,6 +30,9 @@ function About() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageErrors, setImageErrors] = useState({});
   const [selectedTeamMember, setSelectedTeamMember] = useState(null);
+  const [showCertificate, setShowCertificate] = useState(false);
+  const [zoomedCertificate, setZoomedCertificate] = useState(null);
+  const [certZoom, setCertZoom] = useState(1);
   const galleryScrollRef = useRef(null);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
@@ -160,16 +163,22 @@ function About() {
   useEffect(() => {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
+        if (zoomedCertificate) {
+          setZoomedCertificate(null);
+          setCertZoom(1);
+          return;
+        }
         if (selectedImage) {
           setSelectedImage(null);
         }
         if (selectedTeamMember) {
           setSelectedTeamMember(null);
+          setShowCertificate(false);
         }
       }
     };
 
-    if (selectedImage || selectedTeamMember) {
+    if (selectedImage || selectedTeamMember || zoomedCertificate) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
     }
@@ -178,7 +187,7 @@ function About() {
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [selectedImage, selectedTeamMember]);
+  }, [selectedImage, selectedTeamMember, zoomedCertificate]);
 
   // Cleanup event listeners on unmount
   useEffect(() => {
@@ -758,8 +767,8 @@ function About() {
                 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={(e) => {
-                  // Only open modal if not dragging
                   if (!teamCarouselHasDragged.current) {
+                    setShowCertificate(false);
                     setSelectedTeamMember(member);
                   }
                 }}
@@ -876,7 +885,7 @@ function About() {
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4"
           style={{ backgroundColor: 'rgba(0, 0, 0, 0.85)' }}
-          onClick={() => setSelectedTeamMember(null)}
+          onClick={() => { setSelectedTeamMember(null); setShowCertificate(false); }}
         >
           <div
             className="relative bg-black border-2 border-[#3533c7] rounded-lg max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto"
@@ -884,7 +893,7 @@ function About() {
           >
             {/* Close Button */}
             <button
-              onClick={() => setSelectedTeamMember(null)}
+              onClick={() => { setSelectedTeamMember(null); setShowCertificate(false); }}
               className="absolute top-2 right-2 sm:top-4 sm:right-4 z-10 bg-[#3533c7] hover:bg-[#1d9bf0] text-white rounded-full p-2 sm:p-3 transition-all duration-200 hover:scale-110 active:scale-95 shadow-lg"
               aria-label="Close modal"
             >
@@ -899,17 +908,46 @@ function About() {
             </button>
 
             <div className="p-4 sm:p-6 md:p-8">
-              {/* Top Section - Profile Info */}
+              {/* Top Section - Profile Picture + Certificate side by side */}
               <div className="flex flex-col md:flex-row gap-6 md:gap-8 mb-6 md:mb-8">
-                {/* Left side - Profile Picture */}
-                <div className="w-full md:w-[280px] lg:w-[320px] flex-shrink-0 flex items-center justify-center">
-                  <div className="w-full rounded-xl overflow-hidden bg-gradient-to-b from-gray-800 to-gray-900 border-2 border-[#3533c7]/50 shadow-lg">
-                    <img
-                      src={selectedTeamMember.image}
-                      alt={selectedTeamMember.name}
-                      className="w-full h-auto object-contain"
-                    />
+                {/* Left side - Profile Picture & Certificate side by side */}
+                <div className="flex flex-col sm:flex-row gap-4 flex-shrink-0">
+                  {/* Profile Picture */}
+                  <div className="w-full sm:w-[260px] md:w-[280px] lg:w-[320px] flex-shrink-0 flex items-start justify-center">
+                    <div className="w-full rounded-xl overflow-hidden bg-gradient-to-b from-gray-800 to-gray-900 border-2 border-[#3533c7]/50 shadow-lg">
+                      <img
+                        src={selectedTeamMember.image}
+                        alt={selectedTeamMember.name}
+                        className="w-full h-auto object-contain"
+                      />
+                    </div>
                   </div>
+
+                  {/* Certificate - beside the picture */}
+                  {selectedTeamMember.certificate && showCertificate && (
+                    <div className="w-full sm:w-[260px] md:w-[280px] lg:w-[320px] flex-shrink-0 flex items-start justify-center animate-fadeIn">
+                      <div
+                        className="w-full rounded-xl overflow-hidden bg-gray-900 border-2 border-[#3533c7] shadow-2xl cursor-pointer group/cert relative"
+                        onClick={() => { setZoomedCertificate(selectedTeamMember.certificate); setCertZoom(1); }}
+                      >
+                        <img
+                          src={selectedTeamMember.certificate}
+                          alt={`${selectedTeamMember.name} Certificate`}
+                          className="w-full h-auto object-contain group-hover/cert:brightness-75 transition-all duration-200"
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cert:opacity-100 transition-opacity duration-200 pointer-events-none">
+                          <div className="bg-black/60 rounded-full p-3">
+                            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                            </svg>
+                          </div>
+                        </div>
+                        <div className="bg-gray-900 text-center py-2">
+                          <span className="text-sm text-gray-400 font-medium">Certificate — Click to enlarge</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right side - Name, Role, Description */}
@@ -922,33 +960,105 @@ function About() {
                     {selectedTeamMember.role}
                   </p>
 
-                  {/* Description */}
                   {selectedTeamMember.description && (
-                    <div className="space-y-2">
-                      <p className="text-gray-300 leading-relaxed text-base sm:text-lg">
-                        {selectedTeamMember.description}
-                      </p>
-                    </div>
+                    <p className="text-gray-300 leading-relaxed text-base sm:text-lg mb-4 sm:mb-6">
+                      {selectedTeamMember.description}
+                    </p>
+                  )}
+
+                  {/* View Certificate Button */}
+                  {selectedTeamMember.certificate && (
+                    <button
+                      onClick={() => setShowCertificate(prev => !prev)}
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#3533c7] hover:bg-[#1d9bf0] text-white font-medium text-sm sm:text-base transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-fit"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        {showCertificate ? (
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21" />
+                        ) : (
+                          <>
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                          </>
+                        )}
+                      </svg>
+                      {showCertificate ? 'Hide Certificate' : 'View Certificate'}
+                    </button>
                   )}
                 </div>
               </div>
-
-              {/* Certificate Section - Full Width */}
-              {selectedTeamMember.certificate && (
-                <div className="w-full border-t border-[#3533c7]/30 pt-6 md:pt-8">
-                  <h3 className="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-white text-center">
-                    Certificate
-                  </h3>
-                  <div className="w-full rounded-xl overflow-hidden bg-gray-900 border-2 border-[#3533c7] shadow-2xl">
-                    <img
-                      src={selectedTeamMember.certificate}
-                      alt={`${selectedTeamMember.name} Certificate`}
-                      className="w-full h-auto object-contain"
-                    />
-                  </div>
-                </div>
-              )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Zoomed Certificate Modal */}
+      {zoomedCertificate && (
+        <div
+          className="fixed inset-0 z-[60] flex items-center justify-center p-4"
+          style={{ backgroundColor: 'rgba(0, 0, 0, 0.95)' }}
+          onClick={() => { setZoomedCertificate(null); setCertZoom(1); }}
+        >
+          <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center">
+            <div
+              className="overflow-auto max-w-full max-h-full flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={zoomedCertificate}
+                alt="Certificate"
+                className="transition-transform duration-200 ease-out rounded-lg"
+                style={{ transform: `scale(${certZoom})`, transformOrigin: 'center center' }}
+                draggable={false}
+              />
+            </div>
+
+            {/* Zoom Controls */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 bg-black/70 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+              <button
+                onClick={(e) => { e.stopPropagation(); setCertZoom(prev => Math.max(0.25, prev - 0.25)); }}
+                className="text-white hover:text-blue-400 transition-colors p-1.5 rounded-full hover:bg-white/10"
+                aria-label="Zoom out"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM13 10H7" />
+                </svg>
+              </button>
+
+              <span className="text-white text-sm font-medium min-w-[4ch] text-center select-none">
+                {Math.round(certZoom * 100)}%
+              </span>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); setCertZoom(prev => Math.min(3, prev + 0.25)); }}
+                className="text-white hover:text-blue-400 transition-colors p-1.5 rounded-full hover:bg-white/10"
+                aria-label="Zoom in"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                </svg>
+              </button>
+
+              <div className="w-px h-5 bg-white/30"></div>
+
+              <button
+                onClick={(e) => { e.stopPropagation(); setCertZoom(1); }}
+                className="text-white hover:text-blue-400 transition-colors text-xs font-medium px-2 py-1 rounded hover:bg-white/10"
+              >
+                Reset
+              </button>
+            </div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => { setZoomedCertificate(null); setCertZoom(1); }}
+              className="absolute top-4 right-4 text-white hover:text-gray-300 bg-black/50 hover:bg-black/70 rounded-full w-12 h-12 flex items-center justify-center transition-all duration-200 hover:scale-110"
+              aria-label="Close"
+            >
+              <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
           </div>
         </div>
       )}
