@@ -8,12 +8,15 @@ import EdwardLucasImg from '../assets/team_members/Edward Lucas.png';
 import FrederickAtonImg from '../assets/team_members/Frederick Aton.png';
 import AllanCobeloImg from '../assets/team_members/Allan Cobelo.png';
 import MarkRingorImg from '../assets/team_members/Mark RIngor.png';
+import MoisesAlfonsoImg from '../assets/team_members/Moises Alfonso.png';
 
 // Import driver certificates
-import OmarDelgadoCert from '../assets/team_members/certificates/Cert - Omar Delgado.png';
-import EdwardLucasCert from '../assets/team_members/certificates/Cert- Edward Lucas.png';
-import FrederickAtonCert from '../assets/team_members/certificates/Cert - Frederick Aton.png';
-import AllanCobeloCert from '../assets/team_members/certificates/Cert - Allan Cobelo.png';
+import JaysonMosquedaCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Jayson T. Mosqueda.jpg';
+import EdwardLucasCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Edward R. Lucas.jpg';
+import FrederickAtonCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Frederick D. Aton.jpg';
+import AllanCobeloCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Allan B. Cobilo.jpg';
+import MarkRingorCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Mark Julier S Ringor.jpg';
+import MoisesAlfonsoCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Moises E. Alfonso.jpg';
 
 // Team Leaders (Management)
 export const TEAM_LEADERS = [
@@ -30,7 +33,8 @@ export const TEAM_MEMBERS = [
   {
     name: 'Jayson Mosqueda',
     role: 'Assistant Transport Officer',
-    image: JaysonMosquedaImg
+    image: JaysonMosquedaImg,
+    certificate: JaysonMosquedaCert
   },
   {
     name: 'Ron Aldrian Golingo',
@@ -66,7 +70,15 @@ export const DRIVERS = [
     name: 'Mark Ringor',
     role: 'Driver',
     image: MarkRingorImg,
+    certificate: MarkRingorCert,
     description: 'A reliable and professional driver dedicated to providing exceptional transportation services. Mark\'s expertise and courteous service contribute to RonWay\'s reputation for excellence.'
+  },
+  {
+    name: 'Moises Alfonso',
+    role: 'Driver',
+    image: MoisesAlfonsoImg,
+    certificate: MoisesAlfonsoCert,
+    description: 'A dependable and skilled driver committed to delivering safe and comfortable rides. Moises brings professionalism and a strong work ethic to every trip with RonWay.'
   }
 ];
 
