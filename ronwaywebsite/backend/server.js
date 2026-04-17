@@ -145,48 +145,48 @@ app.post('/api/contact', async (req, res) => {
   try {
     const { firstName, lastName, email, phoneNumber, message, countryCode, captchaToken } = req.body;
 
+    // TODO: Re-enable captcha verification when ready
     // Security: Verify hCaptcha token
-    if (!captchaToken) {
-      return res.status(400).json({ 
-        success: false, 
-        error: 'Captcha verification is required' 
-      });
-    }
+    // if (!captchaToken) {
+    //   return res.status(400).json({ 
+    //     success: false, 
+    //     error: 'Captcha verification is required' 
+    //   });
+    // }
 
     // Verify captcha with hCaptcha API
-    const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY;
-    if (HCAPTCHA_SECRET_KEY) {
-      try {
-        const captchaVerifyResponse = await fetch('https://hcaptcha.com/siteverify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-          body: new URLSearchParams({
-            secret: HCAPTCHA_SECRET_KEY,
-            response: captchaToken
-          })
-        });
-
-        const captchaData = await captchaVerifyResponse.json();
-        
-        if (!captchaData.success) {
-          return res.status(400).json({ 
-            success: false, 
-            error: 'Captcha verification failed. Please try again.' 
-          });
-        }
-      } catch (captchaError) {
-        console.error('Error verifying captcha:', captchaError);
-        // In production, you might want to fail here, but for development we'll allow it
-        if (process.env.NODE_ENV === 'production') {
-          return res.status(500).json({ 
-            success: false, 
-            error: 'Captcha verification service error. Please try again later.' 
-          });
-        }
-      }
-    }
+    // const HCAPTCHA_SECRET_KEY = process.env.HCAPTCHA_SECRET_KEY;
+    // if (HCAPTCHA_SECRET_KEY) {
+    //   try {
+    //     const captchaVerifyResponse = await fetch('https://hcaptcha.com/siteverify', {
+    //       method: 'POST',
+    //       headers: {
+    //         'Content-Type': 'application/x-www-form-urlencoded',
+    //       },
+    //       body: new URLSearchParams({
+    //         secret: HCAPTCHA_SECRET_KEY,
+    //         response: captchaToken
+    //       })
+    //     });
+    //
+    //     const captchaData = await captchaVerifyResponse.json();
+    //     
+    //     if (!captchaData.success) {
+    //       return res.status(400).json({ 
+    //         success: false, 
+    //         error: 'Captcha verification failed. Please try again.' 
+    //       });
+    //     }
+    //   } catch (captchaError) {
+    //     console.error('Error verifying captcha:', captchaError);
+    //     if (process.env.NODE_ENV === 'production') {
+    //       return res.status(500).json({ 
+    //         success: false, 
+    //         error: 'Captcha verification service error. Please try again later.' 
+    //       });
+    //     }
+    //   }
+    // }
 
     // Security: Input validation - check required fields
     if (!firstName || !lastName || !email || !phoneNumber || !message) {

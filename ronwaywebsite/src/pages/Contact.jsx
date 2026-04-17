@@ -125,13 +125,13 @@ function Contact() {
       return;
     }
 
-    // Check if captcha is completed
-    if (!captchaToken) {
-      setSubmitStatus('error');
-      setSubmitMessage('Please complete the captcha verification.');
-      setTimeout(() => setSubmitStatus(null), 5000);
-      return;
-    }
+    // TODO: Re-enable captcha check when ready
+    // if (!captchaToken) {
+    //   setSubmitStatus('error');
+    //   setSubmitMessage('Please complete the captcha verification.');
+    //   setTimeout(() => setSubmitStatus(null), 5000);
+    //   return;
+    // }
 
     // Show confirmation modal
     setShowConfirmModal(true);
@@ -607,6 +607,7 @@ function Contact() {
                 </div>
               )}
 
+              {/* TODO: Re-enable captcha when ready
               <div>
                 <HCaptcha
                   sitekey={HCAPTCHA_SITE_KEY}
@@ -619,6 +620,7 @@ function Contact() {
                   <p className="mt-1 text-sm text-red-500">{errors.captcha}</p>
                 )}
               </div>
+              */}
 
               <button
                 type="submit"
