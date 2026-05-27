@@ -11,12 +11,19 @@ import MarkRingorImg from '../assets/team_members/Mark RIngor.png';
 import MoisesAlfonsoImg from '../assets/team_members/Moises Alfonso.png';
 
 // Import driver certificates
-import JaysonMosquedaCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Jayson T. Mosqueda.jpg';
-import EdwardLucasCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Edward R. Lucas.jpg';
-import FrederickAtonCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Frederick D. Aton.jpg';
-import AllanCobeloCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Allan B. Cobilo.jpg';
-import MarkRingorCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Mark Julier S Ringor.jpg';
-import MoisesAlfonsoCert from '../assets/team_members/certificates/DDA Certificate RONWAYS Moises E. Alfonso.jpg';
+import JaysonMosquedaCert2026 from '../assets/team_members/certificates/2026 Jayson Mosqueda.png';
+
+import EdwardLucasCert2025 from '../assets/team_members/certificates/2025 Edward Lucas Cert.png';
+import EdwardLucasCert2026 from '../assets/team_members/certificates/2026 Edward Lucas Cert.png';
+
+import FrederickAtonCert2025 from '../assets/team_members/certificates/2025 Frederick Aton Cert.png';
+import FrederickAtonCert2026 from '../assets/team_members/certificates/2026 Frederick Aton Cert.png';
+
+import AllanCobeloCert2025 from '../assets/team_members/certificates/2025 Allan Cobelo Cert.png';
+import AllanCobeloCert2026 from '../assets/team_members/certificates/2026 Allan Cabilo Cert.png';
+
+import MarkRingorCert2026 from '../assets/team_members/certificates/2026 Mark Ringor Cert.png';
+import MoisesAlfonsoCert2026 from '../assets/team_members/certificates/2026 Moises Alfonso Cert.png';
 
 // Team Leaders (Management)
 export const TEAM_LEADERS = [
@@ -34,7 +41,7 @@ export const TEAM_MEMBERS = [
     name: 'Jayson Mosqueda',
     role: 'Assistant Transport Officer',
     image: JaysonMosquedaImg,
-    certificate: JaysonMosquedaCert
+    certificates: [{ year: '2026', src: JaysonMosquedaCert2026 }]
   },
   {
     name: 'Ron Aldrian Golingo',
@@ -49,35 +56,44 @@ export const DRIVERS = [
     name: 'Edward Lucas',
     role: 'Driver',
     image: EdwardLucasImg,
-    certificate: EdwardLucasCert,
+    certificates: [
+      { year: '2025', src: EdwardLucasCert2025 },
+      { year: '2026', src: EdwardLucasCert2026 }
+    ],
     description: 'A dedicated professional driver with extensive experience in passenger transportation. Edward prioritizes safety and punctuality, making him a trusted member of the RonWay team.'
   },
   {
     name: 'Frederick Aton',
     role: 'Driver',
     image: FrederickAtonImg,
-    certificate: FrederickAtonCert,
+    certificates: [
+      { year: '2025', src: FrederickAtonCert2025 },
+      { year: '2026', src: FrederickAtonCert2026 }
+    ],
     description: 'An experienced driver known for his excellent driving skills and customer service. Frederick brings reliability and professionalism to every trip, ensuring passengers reach their destinations safely and on time.'
   },
   {
     name: 'Allan Cobelo',
     role: 'Driver',
     image: AllanCobeloImg,
-    certificate: AllanCobeloCert,
+    certificates: [
+      { year: '2025', src: AllanCobeloCert2025 },
+      { year: '2026', src: AllanCobeloCert2026 }
+    ],
     description: 'A professional driver with a strong commitment to safety and customer satisfaction. Allan\'s attention to detail and friendly demeanor make every journey with RonWay a pleasant experience.'
   },
   {
     name: 'Mark Ringor',
     role: 'Driver',
     image: MarkRingorImg,
-    certificate: MarkRingorCert,
+    certificates: [{ year: '2026', src: MarkRingorCert2026 }],
     description: 'A reliable and professional driver dedicated to providing exceptional transportation services. Mark\'s expertise and courteous service contribute to RonWay\'s reputation for excellence.'
   },
   {
     name: 'Moises Alfonso',
     role: 'Driver',
     image: MoisesAlfonsoImg,
-    certificate: MoisesAlfonsoCert,
+    certificates: [{ year: '2026', src: MoisesAlfonsoCert2026 }],
     description: 'A dependable and skilled driver committed to delivering safe and comfortable rides. Moises brings professionalism and a strong work ethic to every trip with RonWay.'
   }
 ];

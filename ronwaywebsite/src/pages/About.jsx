@@ -33,6 +33,7 @@ function About() {
   const [showCertificate, setShowCertificate] = useState(false);
   const [zoomedCertificate, setZoomedCertificate] = useState(null);
   const [certZoom, setCertZoom] = useState(1);
+  const [selectedCertificateIndex, setSelectedCertificateIndex] = useState(0);
   const galleryScrollRef = useRef(null);
   const isDragging = useRef(false);
   const dragStartX = useRef(0);
@@ -174,6 +175,7 @@ function About() {
         if (selectedTeamMember) {
           setSelectedTeamMember(null);
           setShowCertificate(false);
+          setSelectedCertificateIndex(0);
         }
       }
     };
@@ -924,16 +926,40 @@ function About() {
                   </div>
 
                   {/* Certificate - beside the picture */}
-                  {selectedTeamMember.certificate && showCertificate && (
-                    <div className="w-full sm:w-[260px] md:w-[280px] lg:w-[320px] flex-shrink-0 flex items-start justify-center animate-fadeIn">
+                  {selectedTeamMember.certificates?.length > 0 && showCertificate && (
+                    <div className="w-full sm:w-[300px] md:w-[340px] lg:w-[380px] flex-shrink-0 flex flex-col items-end gap-2 animate-fadeIn">
+                      {/* Year selector (top-right above certificate) */}
+                      {selectedTeamMember.certificates?.length > 1 && (
+                        <div className="flex items-center justify-end gap-2 w-full">
+                          {selectedTeamMember.certificates.map((cert, idx) => (
+                            <button
+                              key={`${cert?.year ?? 'cert'}-${idx}`}
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setSelectedCertificateIndex(idx); }}
+                              className={`px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+                                idx === selectedCertificateIndex
+                                  ? 'bg-[#3533c7] text-white border-[#3533c7]'
+                                  : 'bg-black text-gray-300 border-white/20 hover:bg-white/10'
+                              }`}
+                            >
+                              {cert?.year ?? `Cert ${idx + 1}`}
+                            </button>
+                          ))}
+                        </div>
+                      )}
+
                       <div
                         className="w-full rounded-xl overflow-hidden bg-gray-900 border-2 border-[#3533c7] shadow-2xl cursor-pointer group/cert relative"
-                        onClick={() => { setZoomedCertificate(selectedTeamMember.certificate); setCertZoom(1); }}
+                        onClick={() => { setZoomedCertificate(selectedTeamMember.certificates?.[selectedCertificateIndex]?.src); setCertZoom(1); }}
+                        onContextMenu={(e) => e.preventDefault()}
                       >
                         <img
-                          src={selectedTeamMember.certificate}
+                          src={selectedTeamMember.certificates?.[selectedCertificateIndex]?.src}
                           alt={`${selectedTeamMember.name} Certificate`}
                           className="w-full h-auto object-contain group-hover/cert:brightness-75 transition-all duration-200"
+                          draggable={false}
+                          onDragStart={(e) => e.preventDefault()}
+                          onContextMenu={(e) => e.preventDefault()}
                         />
                         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover/cert:opacity-100 transition-opacity duration-200 pointer-events-none">
                           <div className="bg-black/60 rounded-full p-3">
@@ -967,9 +993,9 @@ function About() {
                   )}
 
                   {/* View Certificate Button */}
-                  {selectedTeamMember.certificate && (
+                  {selectedTeamMember.certificates?.length > 0 && (
                     <button
-                      onClick={() => setShowCertificate(prev => !prev)}
+                      onClick={() => { setSelectedCertificateIndex(0); setShowCertificate(prev => !prev); }}
                       className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#3533c7] hover:bg-[#1d9bf0] text-white font-medium text-sm sm:text-base transition-all duration-200 hover:scale-105 active:scale-95 shadow-lg w-fit"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1003,6 +1029,7 @@ function About() {
             <div
               className="overflow-auto max-w-full max-h-full flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
+              onContextMenu={(e) => e.preventDefault()}
             >
               <img
                 src={zoomedCertificate}
@@ -1010,6 +1037,8 @@ function About() {
                 className="transition-transform duration-200 ease-out rounded-lg"
                 style={{ transform: `scale(${certZoom})`, transformOrigin: 'center center' }}
                 draggable={false}
+                onDragStart={(e) => e.preventDefault()}
+                onContextMenu={(e) => e.preventDefault()}
               />
             </div>
 
