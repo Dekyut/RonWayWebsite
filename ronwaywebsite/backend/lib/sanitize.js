@@ -1,9 +1,3 @@
-import { JSDOM } from 'jsdom';
-import createDOMPurify from 'dompurify';
-
-const window = new JSDOM('').window;
-const DOMPurify = createDOMPurify(window);
-
 export const MAX_FIELD_LENGTH = {
   firstName: 50,
   lastName: 50,
@@ -15,11 +9,7 @@ export const MAX_FIELD_LENGTH = {
 
 export const sanitize = (str) => {
   if (typeof str !== 'string') return '';
-  const sanitized = DOMPurify.sanitize(str, {
-    ALLOWED_TAGS: [],
-    ALLOWED_ATTR: [],
-  });
-  return sanitized.replace(/[\r\n]/g, '').trim();
+  return str.replace(/<[^>]*>/g, '').replace(/[\r\n]/g, '').trim();
 };
 
 export const sanitizeEmail = (email) => {
@@ -37,4 +27,12 @@ export const validateLength = (value, maxLength) => {
   return value.length <= maxLength;
 };
 
-export { DOMPurify };
+export const escapeHtml = (str) => {
+  if (typeof str !== 'string') return '';
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};

@@ -1,8 +1,8 @@
 import isEmail from 'isemail';
 import { createTransporter } from './email.js';
 import {
-  DOMPurify,
   MAX_FIELD_LENGTH,
+  escapeHtml,
   sanitize,
   sanitizeEmail,
   sanitizeName,
@@ -146,16 +146,16 @@ Submitted At: ${dateTime}`;
           
           <p><strong>Client Information</strong><br>
           ${'─'.repeat(24)}<br>
-          Name: ${DOMPurify.sanitize(fullName)}<br>
-          Email: ${DOMPurify.sanitize(safeReplyTo)}<br>
-          Phone: ${DOMPurify.sanitize(formattedPhone)}</p>
+          Name: ${escapeHtml(fullName)}<br>
+          Email: ${escapeHtml(safeReplyTo)}<br>
+          Phone: ${escapeHtml(formattedPhone)}</p>
           
           <p><strong>Message</strong><br>
           ${'─'.repeat(24)}<br>
-          ${DOMPurify.sanitize(sanitizedMessage).replace(/\n/g, '<br>')}</p>
+          ${escapeHtml(sanitizedMessage).replace(/\n/g, '<br>')}</p>
           
           <p style="margin-top: 20px; color: #666; font-size: 12px;">
-            Submitted At: ${DOMPurify.sanitize(dateTime)}
+            Submitted At: ${escapeHtml(dateTime)}
           </p>
         </div>
       `,
@@ -170,7 +170,7 @@ Submitted At: ${dateTime}`;
           html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
             <h2 style="color: #021945;">Thank you for contacting us!</h2>
-            <p>Dear ${DOMPurify.sanitize(sanitizedFirstName)},</p>
+            <p>Dear ${escapeHtml(sanitizedFirstName)},</p>
             <p>We have received your message and will get back to you as soon as possible.</p>
             <p>Best regards,<br>The Ronway Team</p>
           </div>
@@ -188,11 +188,8 @@ Submitted At: ${dateTime}`;
       body: { success: true, message: 'Email sent successfully' },
     };
   } catch (error) {
-    if (!isProduction) {
-      console.error('Error sending email:', error);
-    } else {
-      console.error('Error sending email:', error.message);
-    }
+    console.error('Error sending email:', error?.message || error);
+    if (error?.code) console.error('Email error code:', error.code);
 
     return {
       status: 500,
