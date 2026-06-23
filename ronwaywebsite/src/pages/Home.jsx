@@ -259,17 +259,17 @@ function Home() {
             className="w-full h-auto block relative"
           />
           
-          {/* Text Section - Bottom part of top half of background image */}
+          {/* Text Section - in-flow on mobile, overlaid on image at md+ */}
           <div 
-            className="absolute left-0 w-full z-30 px-[clamp(0.75rem,2vw,1rem)] sm:px-[clamp(1rem,2vw,1.5rem)] md:px-[clamp(1.5rem,4vw,2rem)] top-[clamp(30%,35vh,40%)] sm:top-[40%] md:top-[45%] pb-[clamp(3rem,6vh,4rem)] sm:pb-0"
+            className="relative md:absolute left-0 w-full z-30 px-[clamp(0.75rem,2vw,1rem)] sm:px-[clamp(1rem,2vw,1.5rem)] md:px-[clamp(1.5rem,4vw,2rem)] md:top-[40%] lg:top-[45%] py-6 md:py-0 bg-black md:bg-transparent"
           >
-            <div className="max-w-[1200px] mx-auto text-center text-white px-2 sm:px-4 pb-[clamp(3rem,6vh,4rem)] sm:pb-0">
+            <div className="max-w-[1200px] mx-auto text-center text-white px-2 sm:px-4">
               <p
                 className="font-bold mb-[clamp(0.5rem,1.5vh,1rem)] sm:mb-[clamp(0.75rem,2vh,1.5rem)] font-['Montserrat',sans-serif] text-center opacity-60 text-[clamp(1.5rem,4vh,2.5rem)] sm:text-[clamp(1.75rem,4.5vh,3rem)] md:text-[clamp(2rem,5vh,3.5rem)]"
               >
                 We Take You Places.
               </p>
-              <p className="text-[clamp(0.7rem,1.6vh,0.95rem)] sm:text-[clamp(0.85rem,2vh,1.15rem)] md:text-[clamp(0.9rem,2.2vh,1.2rem)] font-normal mb-[clamp(3rem,6vh,4rem)] sm:mb-[clamp(4rem,8vh,6rem)] mt-[clamp(0.5rem,1.5vh,1rem)] sm:mt-[clamp(1rem,2.5vh,1.5rem)] pb-[clamp(2rem,4vh,3rem)] sm:pb-0 font-['Montserrat',sans-serif] text-center leading-[1.3] sm:leading-relaxed">
+              <p className="text-[clamp(0.7rem,1.6vh,0.95rem)] sm:text-[clamp(0.85rem,2vh,1.15rem)] md:text-[clamp(0.9rem,2.2vh,1.2rem)] font-normal mb-0 md:mb-[clamp(4rem,8vh,6rem)] mt-[clamp(0.5rem,1.5vh,1rem)] sm:mt-[clamp(1rem,2.5vh,1.5rem)] font-['Montserrat',sans-serif] text-center leading-[1.3] sm:leading-relaxed">
                 <span className="block sm:inline">Your trusted partner for premium car rentals and seamless travel solutions.</span>
                 <span className="hidden sm:inline"> </span>
                 <br className="hidden sm:block" />
@@ -289,11 +289,11 @@ function Home() {
         </div>
       </section>
 
-      {/* Empty Black Section - Spacer between text and search */}
-      <section className="w-full bg-black pt-[clamp(0.5rem,1vh,1rem)] pb-[clamp(1rem,2vh,1.5rem)] sm:py-[clamp(0.5rem,1vh,1rem)]"></section>
+      {/* Spacer between overlaid text and search (desktop only) */}
+      <section className="hidden md:block w-full bg-black py-[clamp(0.5rem,1vh,1rem)]"></section>
 
-      {/* Search Form Section - Separate, no overlap */}
-      <section className="relative w-full bg-black px-4 md:px-8 py-[clamp(2rem,4vh,3rem)] flex flex-col items-center">
+      {/* Search Form Section */}
+      <section className="relative w-full bg-black px-4 md:px-8 pt-6 pb-[clamp(2rem,4vh,3rem)] md:py-[clamp(2rem,4vh,3rem)] flex flex-col items-center">
           <div 
             ref={searchRef}
             className={`max-w-[1200px] w-full transition-all duration-1000 ease-out ${

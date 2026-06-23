@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { lockBodyScroll, unlockBodyScroll } from '../utils/bodyScrollLock';
 
 const NAV_ITEMS = [
   { 
@@ -50,6 +51,7 @@ function NavBar() {
   const [mobileOpenDropdown, setMobileOpenDropdown] = useState(null);
   const [hoveredDropdownItem, setHoveredDropdownItem] = useState(null);
   const [currentSection, setCurrentSection] = useState(null);
+  const [mobileMenuStyle, setMobileMenuStyle] = useState({ top: 0, right: 16 });
   const dropdownRefs = useRef({});
   const hoverTimeoutRef = useRef(null);
   const menuRef = useRef(null);
@@ -86,7 +88,7 @@ function NavBar() {
     };
   }, [openDropdown]);
 
-  // Close mobile menu when clicking outside
+  // Close mobile menu when clicking outside; lock scroll without jumping to top
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -95,17 +97,28 @@ function NavBar() {
     };
 
     if (isMenuOpen) {
+      lockBodyScroll();
       document.addEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'unset';
+      if (isMenuOpen) {
+        unlockBodyScroll();
+      }
     };
   }, [isMenuOpen]);
+
+  const toggleMobileMenu = () => {
+    if (!isMenuOpen && menuRef.current) {
+      const rect = menuRef.current.getBoundingClientRect();
+      setMobileMenuStyle({
+        top: rect.bottom + 8,
+        right: Math.max(16, window.innerWidth - rect.right),
+      });
+    }
+    setIsMenuOpen((prev) => !prev);
+  };
 
   // Handle navigation to section on page load or route change
   useEffect(() => {
@@ -307,7 +320,7 @@ function NavBar() {
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
-            setIsMenuOpen(!isMenuOpen);
+            toggleMobileMenu();
           }}
           className="flex flex-col gap-1.5 p-2 -mr-2"
           aria-label="Toggle menu"
@@ -453,7 +466,10 @@ function NavBar() {
 
       {/* Mobile Navigation Menu */}
       {isMobile && isMenuOpen && (
-        <div className="absolute top-full right-0 mt-2 w-64 rounded-lg border border-white/20 bg-[#051941] shadow-2xl py-4 z-50">
+        <div
+          className="fixed w-64 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-lg border border-white/20 bg-[#051941] shadow-2xl py-4 z-[60]"
+          style={{ top: mobileMenuStyle.top, right: mobileMenuStyle.right }}
+        >
           <div className="flex flex-col">
             {NAV_ITEMS.map((item) => {
               const hasDropdown = item.dropdown && item.dropdown.length > 0;

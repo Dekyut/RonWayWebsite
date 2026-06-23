@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink } from 'react-router-dom';
+import { lockBodyScroll, unlockBodyScroll } from '../../utils/bodyScrollLock';
 
 const NAV_ITEMS = [
   { label: 'Home', to: '/light' },
@@ -11,6 +12,7 @@ const NAV_ITEMS = [
 function NavBarLight() {
   const [isMobile, setIsMobile] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [mobileMenuStyle, setMobileMenuStyle] = useState({ top: 0, right: 16 });
   const menuRef = useRef(null);
 
   useEffect(() => {
@@ -26,7 +28,6 @@ function NavBarLight() {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {
@@ -35,24 +36,36 @@ function NavBarLight() {
     };
 
     if (isMenuOpen) {
+      lockBodyScroll();
       document.addEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
-      document.body.style.overflow = 'unset';
+      if (isMenuOpen) {
+        unlockBodyScroll();
+      }
     };
   }, [isMenuOpen]);
+
+  const toggleMobileMenu = () => {
+    if (!isMenuOpen && menuRef.current) {
+      const rect = menuRef.current.getBoundingClientRect();
+      setMobileMenuStyle({
+        top: rect.bottom + 8,
+        right: Math.max(16, window.innerWidth - rect.right),
+      });
+    }
+    setIsMenuOpen((prev) => !prev);
+  };
 
   return (
     <nav aria-label="Main navigation" className="relative" ref={menuRef}>
       {/* Hamburger Menu Button - Mobile Only */}
       {isMobile && (
         <button
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          type="button"
+          onClick={toggleMobileMenu}
           className="flex flex-col gap-1.5 p-2 -mr-2"
           aria-label="Toggle menu"
           aria-expanded={isMenuOpen}
@@ -100,7 +113,10 @@ function NavBarLight() {
 
       {/* Mobile Navigation Menu */}
       {isMobile && isMenuOpen && (
-        <div className="absolute top-full right-0 mt-2 w-64 rounded-lg border border-[#2cbafc]/20 bg-white shadow-2xl py-4 z-50">
+        <div
+          className="fixed w-64 max-h-[calc(100vh-5rem)] overflow-y-auto rounded-lg border border-[#2cbafc]/20 bg-white shadow-2xl py-4 z-[60]"
+          style={{ top: mobileMenuStyle.top, right: mobileMenuStyle.right }}
+        >
           <div className="flex flex-col">
             {NAV_ITEMS.map((item) => (
               <NavLink
