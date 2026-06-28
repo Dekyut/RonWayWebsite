@@ -2,6 +2,7 @@
   "name": "ronwaywebsite",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://ronwaytravels.ph/",
   "type": "module",
   "scripts": {
     "dev": "vite",
