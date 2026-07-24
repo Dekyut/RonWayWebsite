@@ -166,7 +166,7 @@ function Contact() {
 
     try {
       // API endpoint - update this to match your backend URL
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3001').replace(/\/+$/, '');
       
       const response = await fetch(`${API_URL}/api/contact`, {
         method: 'POST',

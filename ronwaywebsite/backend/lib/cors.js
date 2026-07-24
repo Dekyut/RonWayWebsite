@@ -1,11 +1,15 @@
 const LOCAL_ORIGINS = ['http://localhost:5173', 'http://localhost:5174', 'http://127.0.0.1:5173'];
 
+function normalizeOrigin(origin) {
+  return origin.trim().replace(/\/+$/, '');
+}
+
 function getAllowedOrigins() {
   const origins = new Set(LOCAL_ORIGINS);
 
   if (process.env.FRONTEND_URL) {
     process.env.FRONTEND_URL.split(',')
-      .map((origin) => origin.trim())
+      .map(normalizeOrigin)
       .filter(Boolean)
       .forEach((origin) => origins.add(origin));
   }
@@ -13,9 +17,43 @@ function getAllowedOrigins() {
   return origins;
 }
 
+function isVercelPreviewOfAllowedOrigin(requestOrigin, allowedOrigins) {
+  let hostname;
+  try {
+    hostname = new URL(requestOrigin).hostname;
+  } catch {
+    return false;
+  }
+
+  if (!hostname.endsWith('.vercel.app')) return false;
+
+  for (const allowed of allowedOrigins) {
+    let allowedHost;
+    try {
+      allowedHost = new URL(allowed).hostname;
+    } catch {
+      continue;
+    }
+
+    // Allow https://my-app-*.vercel.app when FRONTEND_URL is https://my-app.vercel.app
+    if (
+      allowedHost.endsWith('.vercel.app') &&
+      !allowedHost.includes('---') &&
+      hostname.startsWith(`${allowedHost.replace(/\.vercel\.app$/, '')}-`) &&
+      hostname.endsWith('.vercel.app')
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 function isOriginAllowed(requestOrigin) {
   if (!requestOrigin) return false;
-  return getAllowedOrigins().has(requestOrigin);
+  const origin = normalizeOrigin(requestOrigin);
+  const allowedOrigins = getAllowedOrigins();
+  return allowedOrigins.has(origin) || isVercelPreviewOfAllowedOrigin(origin, allowedOrigins);
 }
 
 export function applyCors(req, res) {
