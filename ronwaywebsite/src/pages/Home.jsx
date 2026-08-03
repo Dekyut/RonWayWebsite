@@ -376,7 +376,7 @@ function Home() {
               >
                 <option value="">All Number of Seats</option>
                 <option value="7">7 Seaters—including the Driver</option>
-                <option value="15">15 Seaters—including the Driver</option>
+                <option value="12">12 Seaters—including the Driver</option>
               </select>
               <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg
